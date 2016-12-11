@@ -9,7 +9,6 @@ import com.bf.sprout.annotations.HttpComponent;
 import com.bf.sprout.annotations.HttpSocket;
 import com.bf.sprout.annotations.RestMethod;
 import com.bf.sprout.annotations.Restrict;
-import com.bf.sprout.annotations.Restrict.RestrictLevel;
 import com.bf.sprout.annotations.WebMethod;
 import com.bf.sprout.permissions.SiteUser;
 import com.cedarsoftware.util.io.JsonReader;
@@ -35,9 +34,9 @@ import org.atteo.classindex.ClassIndex;
  */
 public class Dispatcher extends HttpServlet{
 
-	private Map args = new HashMap();
+	private static Map args = new HashMap();
 
-	public Dispatcher(){
+	static{
 		args.put(JsonWriter.WRITE_LONGS_AS_STRINGS, true);
 	}
 
@@ -243,18 +242,21 @@ public class Dispatcher extends HttpServlet{
 				return false;
 			}
 			
-			if(restriction.level() == RestrictLevel.PERMISSION){
-				if(user.getPermissions().hasPermission(permission) || user.getRole().getPermissions().hasPermission(permission)){
-					return false;
-				}
-			}else if(restriction.level() == RestrictLevel.ROLE){
-				if(user.getRole().getName().equalsIgnoreCase(permission)){
-					return false;
-				}
-			}else if(restriction.level() == RestrictLevel.USER){
-				if(user.getName().equalsIgnoreCase(permission)){
-					return false;
-				}
+			if(null != restriction.level())switch(restriction.level()){
+				case PERMISSION:
+					if(user.getPermissions().hasPermission(permission) || user.getRole().getPermissions().hasPermission(permission)){
+						return false;
+					}	break;
+				case ROLE:
+					if(user.getRole().getName().equalsIgnoreCase(permission)){
+						return false;
+					}	break;
+				case USER:
+					if(user.getName().equalsIgnoreCase(permission)){
+						return false;
+					}	break;
+				default:
+					break;
 			}
 		}
 		//return true to block access

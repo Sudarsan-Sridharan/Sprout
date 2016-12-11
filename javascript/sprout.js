@@ -1,1 +1,1 @@
- 
+var Sprout = function () {};
