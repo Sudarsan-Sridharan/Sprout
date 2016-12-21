@@ -19,7 +19,7 @@ import org.atteo.classindex.IndexAnnotated;
 @IndexAnnotated
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD) 
-public @interface RestMethod{
+public @interface JsonMethod{
 	
 	String path() default "";
 	

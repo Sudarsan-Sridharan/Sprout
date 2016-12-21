@@ -7,7 +7,6 @@ package com.bf.sprout.dispatcher;
 
 import com.bf.sprout.annotations.HttpComponent;
 import com.bf.sprout.annotations.HttpSocket;
-import com.bf.sprout.annotations.RestMethod;
 import com.bf.sprout.annotations.Restrict;
 import com.bf.sprout.annotations.WebMethod;
 import com.bf.sprout.permissions.SiteUser;
@@ -27,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.atteo.classindex.ClassIndex;
+import com.bf.sprout.annotations.JsonMethod;
 
 /**
  *
@@ -69,7 +69,7 @@ public class Dispatcher extends HttpServlet{
 
 						Object result = method.invoke(socket, parameters);
 
-						if(method.isAnnotationPresent(RestMethod.class)){
+						if(method.isAnnotationPresent(JsonMethod.class)){
 							response.setContentType("application/json;charset=UTF-8");
 
 							try(PrintWriter out = response.getWriter()){
@@ -188,8 +188,8 @@ public class Dispatcher extends HttpServlet{
 	private Method getMethod(Class<?> klass, String path, boolean post){
 		if(klass != Object.class){
 			for(final Method method : klass.getMethods()){
-				if(method != null && method.isAnnotationPresent(RestMethod.class)){
-					RestMethod annotation = method.getAnnotation(RestMethod.class);
+				if(method != null && method.isAnnotationPresent(JsonMethod.class)){
+					JsonMethod annotation = method.getAnnotation(JsonMethod.class);
 
 					if((annotation.path() != null && annotation.path().equalsIgnoreCase(path)) || method.getName().equalsIgnoreCase(path)){
 						if(annotation.requestType() == RequestType.BOTH){

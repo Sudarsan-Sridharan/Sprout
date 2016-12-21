@@ -7,8 +7,8 @@ package com.bf.sprout.dispatcher;
 
 import com.bf.sprout.annotations.HttpComponent;
 import com.bf.sprout.annotations.HttpSocket;
-import com.bf.sprout.annotations.RestMethod;
 import org.atteo.classindex.ClassIndex;
+import com.bf.sprout.annotations.JsonMethod;
 
 /**
  *
@@ -17,7 +17,7 @@ import org.atteo.classindex.ClassIndex;
 @HttpSocket
 public class ComponentManager{
 
-	@RestMethod
+	@JsonMethod
 	public Object getComponent(String name){
 		try{
 			for(Class<?> klass : ClassIndex.getAnnotated(HttpComponent.class)){
